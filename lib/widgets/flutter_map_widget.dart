@@ -1,6 +1,7 @@
 import 'package:aurora_navigator/misc/tile_providers.dart';
-import 'package:aurora_navigator/plugins/zoombuttons_plugin.dart';
+import 'package:aurora_navigator/services/poi_service.dart';
 import 'package:aurora_navigator/widgets/map_controls_layer.dart';
+import 'package:aurora_navigator/widgets/poi_controls_layer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
@@ -13,7 +14,7 @@ class FlutterMapWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _polylineStr = "ydqliBeqcrfA_KyO_AyA{EsHv^aeA~FkPl[g_Ad[q~@nO}d@bt@stBtM}_@`CiHvUmr@zAsF\\yEBcEKyDg@sDgAcDgKyPaBsA_Bc@iBEuBj@oBjBoDhFuOhf@mWlu@kCzH}d@`tA}f@fxAwTlo@mk@`bBuU|q@sKh[uCnIcAtCoGlTwTzu@aDlJm}@xoC{Ujq@{Off@iNza@yGpUuFxQoHv]wGz]mGj_@qFr^mHrf@o^nyBiLzr@}SdkAeO`z@{BhMgK`p@wG`i@ka@pmC{QphAec@tlDoGfe@mFt^c`@r`C_I|e@aUfuAsJjl@wGn`@qDbSgDfPsCxLsEjPmDnKmFvNmBvFQj@eIjPcGjLyFnJiEvGeE~FeEjFiFvFwFhFaEjDiEbDmZbTyCdCyHnFc`@bYmkDdlCag@x_@WRalBxxA}n@vf@qlCzoBcBhAic@b\\{eD|dCao@fd@qj@b^}b@p[snAp~@u|@dq@}jAjbAs`@j^ii@pc@kGhFmmAv`A{a@n[uq@`j@mv@|k@}a@n[e`@`Zab@x[aMxJyaAzv@{`BfnAwu@pj@arC~mBqbAdr@{fBtiAoFjDad@rYak@t^aQxKsy@vf@{e@|Xwo@l`@gnA|v@oo@f`@ak@`]iz@ng@aZbRuk@r^}cBzcAup@|`@sf@hZs^xTkiAls@m_Avj@ie@xXyRtLcQlK_h@h[yLnHcTzMkv@xc@}nAhu@mm@f_@kAt@{WdQ_[tRa@T_h@p[qNjIcBbAehAhp@wh@v[mV|Ncu@lc@oj@t]_YvPsVbO{VfOcADkHVcs@dPsRlEs\\~F}GnBoFlCmFlDiJ|Jyq@rw@xBrMjDxN`FrOdShm@jAdC`CnBfCl@~CKdOoFrHsF~HsGhIaJ~C{DhKsJtH{KhGyOhTar@z@oCbFkSlCuHnE}IjAy@jNmJzu@ke@xlAiv@tT~@rEQlAdARPxCtCvC|KrA~JvAlAzLmHf@kDmB}N@_FsAyJWmBlOuJh]ySpJ_GdGwDqByOh\\_SbLyG`Hq@`ET`Dd@xCx@pnAn\\dCfA|@x@d@Fx@Kv@u@t@qBb@{CPoDAgEUeDg@{Ci@_C_AaCc@YuAgFcAaIcEyb@}Eme@oNowAk@ePF{H~@{DlCgGnC_DtC{@bCMxCn@|GjFlDtJxFnOz@hCnCzGfJjW|BxGXpCLdC?rCK|C_@lCaBnF}B`DkAt@{WdQ_[tRa@T_h@p[qNjIcBbAehAhp@wh@v[mV|Ncu@lc@oj@t]_YvPsVbO{VfOyI~EcWhOaOjJ}`@j[aKtKk\\|]aW`]kVd_@gGhJyo@ddAsdCrwDw[jj@idApzA{|@rkAgZj_@_ApAsvAzdB}^~c@qi@pq@}pArbBy@fA_n@vx@qFdHy@dAmzA`rB_I`LoUj[GH_TnYwb@ll@yp@|_Agc@rl@_e@xo@qb@pl@y_@bi@wPlTmh@hs@_UrYsi@hs@mThZkaAxrAst@bbActBhqCaJxLssAveBczAprByw@|dA{z@ziAqc@rj@{m@t{@ucAhvAiBbCq^`f@}^fh@kYdc@yNrUsaAxdBeFjI}JzQqOfX}n@fhAyyA~jCu`BluC}o@hfAegAjeBqZ`e@kd@tr@iq@rfAgz@xrAmnCllEiTd]}b@bq@_mBtyCus@`gAsZ~OyS|K{KvFaf@pVyM|G}IzBaG~@sHFcHa@}HqAmIyCqIaEmUmNuRqJkc@oWcQgLo[yRu@e@{n@g`@k@_@_vD{_CsnDa|B}WsPahHqpEaBcAegHcpE_i@e\\g`HokEiViOmsBopA{}@_k@sn@oa@uVcM{LqFoEoByQeHwSuGw_@{JwSqCsTiB_U_A}V_@meAj@iv@v@_UTeNNmi@Mcm@h@}e@nBgi@@i|@KaQ]{Nc@{Km@uJu@kMoAef@kH}AMoL{@kD?gDLkEr@oDdBiDjCoDxDqCtEaCtFaCfI}AjIoAxKy@vMkLhsCk@nP]bOIfOV|OVrG`@vGnCfYpCx]nCd]bGfu@nFdq@nAtO";
+    final _polylineStr = "qwj}hBokirfAyKfIcBgKaByJg\\pUaBjAyEfDm`@vXeIzFsAaLeCyS}VauBaAcIuBwQcAwIsNspAaD{UkCqN}Dy[{A{LiGec@cBoLuViwAsOam@mI_UmOwa@sEcL{Ou\\eJ_R_L{Ns]md@{IyKsCuDsYsV}d@yWwSgIccAsZqRcGgAYcp@uSanAi_@gLmDqs@oTiRyFqo@aS}_@mLyc@qT__@aSiMeHaV}OuUmPeFqDiDuBkC_BaHgE{HyEoLmHmb@c[{DaDsRuIqLkCyL_CqGuBgLkGaTuMgb@oWcDqBsI{F}LoH{MoIgWcPwfC{~AkX}P_zDecCyh@m]om@{`@_HqEyGuEoH}FkLkJgO{Lia@gc@g_@{f@{Q}Xkh@ww@qg@{s@}}@usAyt@mgAyr@gbAep@s_AyFcFkD_BmFe@cE`@kDbBoDfFoBpGsAvL]jLf@rKxEd_@|Jpw@jDdXj@lK?vHOzHiAvSyDj^y[lwBoO|cAuXbjBmaFxp\\kh@vkDyPjiAq@nEmsCzjRgLpv@_DxS}Ipl@kHdf@{_@lhC_\\dxB_n@dcEqS|tAo}AviKiR~iAySneA_WfjA{Hn[yJ|`@uYfcAoXn}@oA`EmAnDyGvRqHxS_Znw@}Tbi@cOp[_FnKqGdNcV~g@{Wze@{Vzc@wDbGg[zf@qd@no@ue@fm@_nDxjE{mCneD{cB~tBkx@dbAy]`c@kxAbfBuOlRgr@vz@uoBfbCsvBfjCihAhtAqp@tx@cx@xaAiy@vbAqaBxrBsQzTgI|JqeKdhMgi@r^ip@no@oIdJa`@bg@id@hl@i@|@wOvWar@bz@sVlZ{b@ph@_KzLslCbcDgbCdwCyIfG{LvBqJ`A_M_AmgC_b@}H}B}FsDyIoHcFqFg@uAoh@_wAeMc]w_@geA}Sai@sz@{vBeF_NaOu`@_@eAsLs\\sc@_nAsZmz@_Nm_@cLk[{`@mhAyMi_@cd@ooA{Osc@uJaY_[wz@ocAcsCwMaScC_DaEwDyFwDwEiBoDy@aEk@yEKiFF{D^_F|@eEfA{EhBeFxCsEzDeZ~ZyEjEgE`DqFfDo`@`S{LxGkHjC__@xEaI~@}FZcOx@kPG{ZeAqKiBax@wM{QwD{OaD}sAmXmA[aa@yJaqCwq@aEmAkF}A{r@qRs\\cNsN}Fya@cOmMeFmJwDcXmLkZaO}DqBwAq@{YmNwDqBiMuGuTuKiN_IyGuD_FgDsGwEuUsPiN_OgVg[c^wo@oM_Z{Ms^uNcf@aMof@sD}N_Kka@wLkh@gJs]uBuH{_@irAeb@gnAsUei@_Qw`@kZar@cBoDiBkDaUug@mU{g@qFuLogAcbCgk@_oAkEaKyBqEuEqJc@_AoNuZcKmT{AaDyMqYuAwC}Yqn@";
     final _points = PolylineDecoder.run(_polylineStr);
 
     final _positionStream =
@@ -29,12 +30,13 @@ class FlutterMapWidget extends StatelessWidget {
 
     return FlutterMap(
       options: MapOptions(
-        initialCenter: LatLng(55.54743, 37.54105), // Center the map over Butovo
+        initialCenter: LatLng(55.547781, 37.541063), // Center the map over Butovo
         initialZoom: 15,
       ),
       children: [
         openStreetMapTileLayer,
         const MapControlsLayer(),
+        const PoiControlsLayer(),
         PolylineLayer(
           polylines: [
             Polyline(
@@ -50,9 +52,11 @@ class FlutterMapWidget extends StatelessWidget {
             ),
           ],
         ),
+        MarkerLayer(markers: PoiTestProvider.getGasStationsMarkers()),
+        MarkerLayer(markers: PoiTestProvider.getCoffeeMarkers()),
         CurrentLocationLayer(
           positionStream: _positionStream,
-          alignPositionOnUpdate: AlignOnUpdate.always,
+          //alignPositionOnUpdate: AlignOnUpdate.always,
         ),
       ],
     );

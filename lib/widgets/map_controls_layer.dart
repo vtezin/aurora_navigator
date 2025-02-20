@@ -57,7 +57,7 @@ class MapControlsLayer extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 10, bottom: 10, right: 10),
+            padding: EdgeInsets.only(left: 10, bottom: 20, right: 10),
             child: FloatingActionButton(
               heroTag: 'zoomOutButton',
               onPressed: () async {
