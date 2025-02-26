@@ -1,15 +1,16 @@
-import 'dart:math';
-import 'package:aurora_navigator/model/poi.dart';
+import 'package:aurora_navigator/services/poi_service/poi_service_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart';
 
 class PoiControlsLayer extends StatelessWidget {
-  const PoiControlsLayer({super.key});
+  const PoiControlsLayer({super.key, required this.poiListNotifier});
+
+  final PoiServiceNotifier poiListNotifier;
 
   @override
   Widget build(BuildContext context) {
+    final mapController = MapController.of(context);
+
     return Align(
       alignment: Alignment.bottomLeft,
       child: Column(
@@ -20,30 +21,19 @@ class PoiControlsLayer extends StatelessWidget {
             child: FloatingActionButton(
               heroTag: 'coffee',
               onPressed: () async {
-
+                await poiListNotifier.getPoiAround(mapController.camera.center, 'food/cafe');
               },
               child: Icon(Icons.coffee),
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(10),
-            child: FloatingActionButton(
-              heroTag: 'hotels',
-              onPressed: () async {
-
-              },
-              child: Icon(Icons.hotel),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10, bottom: 20, right: 10),
+            padding: EdgeInsets.only(left: 10, top: 10, bottom: 20, right: 10),
             child: FloatingActionButton(
               heroTag: 'gasStations',
               onPressed: () async {
-                final poiList = await Poi.getPoiAround(LatLng(55.7967432, 37.5373542));
-                print("${poiList}");
+                await poiListNotifier.getPoiAround(mapController.camera.center, 'shop/general/general');
               },
-              child: Icon(Icons.local_gas_station),
+              child: Icon(Icons.shopping_cart),
             ),
           ),
         ],

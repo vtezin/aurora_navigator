@@ -1,8 +1,5 @@
-import 'package:aurora_navigator/widgets/debug_location.dart';
-import 'package:aurora_navigator/widgets/debug_widget.dart';
-import 'package:aurora_navigator/widgets/flutter_map_widget.dart';
+import 'package:aurora_navigator/widgets/main_map_widget.dart';
 import 'package:flutter/material.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const FlutterMapWidget(),
+      home: const MainMapWidget(),
       //home: const DebugLocation(),
       //home: const DebugWidget(),
     );

@@ -9,8 +9,8 @@ class MapControlsLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = MapController.of(context);
-    final camera = MapCamera.of(context);
+    final mapController = MapController.of(context);
+    final mapCamera = MapCamera.of(context);
 
     Position? currentLocation;
     late bool servicePermission = false;
@@ -39,8 +39,8 @@ class MapControlsLayer extends StatelessWidget {
             child: FloatingActionButton(
               heroTag: 'zoomInButton',
               onPressed: () {
-                final zoom = min(camera.zoom + 1, 19.0);
-                controller.move(camera.center, zoom);
+                final zoom = min(mapCamera.zoom + 1, 19.0);
+                mapController.move(mapCamera.center, zoom);
               },
               child: Icon(Icons.zoom_in),
             ),
@@ -50,8 +50,8 @@ class MapControlsLayer extends StatelessWidget {
             child: FloatingActionButton(
               heroTag: 'zoomOutButton',
               onPressed: () {
-                final zoom = max(camera.zoom - 1, 1.0);
-                controller.move(camera.center, zoom);
+                final zoom = max(mapCamera.zoom - 1, 1.0);
+                mapController.move(mapCamera.center, zoom);
               },
               child: Icon(Icons.zoom_out),
             ),
@@ -63,7 +63,7 @@ class MapControlsLayer extends StatelessWidget {
               onPressed: () async {
                 currentLocation = await getCurrentLocation();
                 if (currentLocation != null) {
-                  controller.move(LatLng(currentLocation!.latitude, currentLocation!.longitude), camera.zoom);
+                  mapController.move(LatLng(currentLocation!.latitude, currentLocation!.longitude), mapCamera.zoom);
                 }
               },
               child: Icon(Icons.near_me),
