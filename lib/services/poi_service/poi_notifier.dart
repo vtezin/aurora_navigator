@@ -3,7 +3,7 @@ import 'package:aurora_navigator/services/poi_service/poi_service.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
-class PoiServiceNotifier extends ChangeNotifier {
+class PoiNotifier extends ChangeNotifier {
   List<Poi> poiList = [];
 
   getPoiAround(LatLng coordinate, String type) async {

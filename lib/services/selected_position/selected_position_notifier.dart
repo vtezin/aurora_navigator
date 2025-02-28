@@ -4,7 +4,7 @@ import 'package:latlong2/latlong.dart';
 class SelectedPositionNotifier extends ChangeNotifier {
   LatLng? selectedPosition;
 
-  setAndNotify(LatLng position) {
+  setAndNotify(LatLng? position) {
     selectedPosition = position;
     notifyListeners();
   }

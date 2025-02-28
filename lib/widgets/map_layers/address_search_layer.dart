@@ -55,36 +55,36 @@ class _AddressSearchLayerState extends State<AddressSearchLayer> {
                     return Expanded(
                       child: foundItems.isNotEmpty
                           ? ListView.builder(
-                              itemCount: foundItems.length,
-                              itemBuilder: (context, index) => Card(
-                                key: ValueKey(foundItems[index].name),
-                                color: Colors.white,
-                                elevation: 4,
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: ListTile(
-                                  leading: Icon(Icons.location_on),
-                                  title: Text(foundItems[index].name),
-                                  subtitle: Text(foundItems[index].address),
-                                  onTap: () async {
-                                    final coordinate = await GeocoderService
-                                        .getCoordinateOfAddress(
-                                            foundItems[index].address);
-                                    if (coordinate != null) {
-                                      textFieldController.clear();
-                                      suggestServiceNotifier.clearSuggests();
-                                      mapController.move(
-                                          LatLng(coordinate.latitude,
-                                              coordinate.longitude),
-                                          16);
-                                      //Provider.of<SelectedPositionNotifier>(context).setAndNotify(coordinate);
-                                      final notifier = context.read<SelectedPositionNotifier>();
-                                      notifier.setAndNotify(coordinate);
-                                    }
-                                  },
-                                ),
-                              ),
-                            )
+                        itemCount: foundItems.length,
+                        itemBuilder: (context, index) => Card(
+                          key: ValueKey(foundItems[index].name),
+                          color: Colors.white,
+                          elevation: 4,
+                          margin:
+                          const EdgeInsets.symmetric(vertical: 10),
+                          child: ListTile(
+                            leading: Icon(Icons.location_on),
+                            title: Text(foundItems[index].name),
+                            subtitle: Text(foundItems[index].address),
+                            onTap: () async {
+                              final coordinate = await GeocoderService
+                                  .getCoordinateOfAddress(
+                                  foundItems[index].address);
+                              if (coordinate != null) {
+                                textFieldController.clear();
+                                suggestServiceNotifier.clearSuggests();
+                                mapController.move(
+                                    LatLng(coordinate.latitude,
+                                        coordinate.longitude),
+                                    16);
+                                Provider.of<SelectedPositionNotifier>(context, listen: false).setAndNotify(coordinate);
+                                // final notifier = context.read<SelectedPositionNotifier>();
+                                // notifier.setAndNotify(coordinate);
+                              }
+                            },
+                          ),
+                        ),
+                      )
                           : const Text(''),
                     );
                   },

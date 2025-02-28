@@ -1,11 +1,12 @@
 import 'package:aurora_navigator/misc/tile_providers.dart';
 import 'package:aurora_navigator/model/poi.dart';
-import 'package:aurora_navigator/services/poi_service/poi_service_notifier.dart';
-import 'package:aurora_navigator/model/route.dart';
+import 'package:aurora_navigator/services/poi_service/poi_notifier.dart';
+import 'package:aurora_navigator/services/route_service/route_notifier.dart';
 import 'package:aurora_navigator/services/selected_position/selected_position_notifier.dart';
 import 'package:aurora_navigator/widgets/map_layers/address_search_layer.dart';
 import 'package:aurora_navigator/widgets/map_layers/map_controls_layer.dart';
 import 'package:aurora_navigator/widgets/map_layers/poi_controls_layer.dart';
+import 'package:aurora_navigator/widgets/map_layers/selected_position_controls_layer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
@@ -32,51 +33,74 @@ class _MainMapWidgetState extends State<MainMapWidget> {
     ),
   );
 
-  final _poiListNotifier = PoiServiceNotifier();
-  final selectedPositionNotifier = SelectedPositionNotifier();
-
-  final _mapInitialCenter = LatLng(55.547781, 37.541063);// Center the map over Butovo
+  final _mapInitialCenter =
+      LatLng(55.547781, 37.541063); // Center the map over Butovo
   final double _mapInitialZoom = 15;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FlutterMap(
-        options: MapOptions(
-          initialCenter: _mapInitialCenter,
-          initialZoom: _mapInitialZoom,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SelectedPositionNotifier(),
         ),
-        children: [
-          openStreetMapTileLayer,
-          PolylineLayer(
-            polylines: [MapRoute.getTestRoute()],
-          ),
-
-          ChangeNotifierProvider(
-            create: (_) {
-              return _poiListNotifier;
+        ChangeNotifierProvider(
+          create: (_) => PoiNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => RouteNotifier(),
+        )
+      ],
+      child: Scaffold(body: Builder(builder: (BuildContext context) {
+        return FlutterMap(
+          options: MapOptions(
+            onTap: (TapPosition tapPosition, LatLng point) {
+              Provider.of<SelectedPositionNotifier>(context, listen: false)
+                  .setAndNotify(point);
             },
-            child: Consumer<PoiServiceNotifier>(
+            initialCenter: _mapInitialCenter,
+            initialZoom: _mapInitialZoom,
+          ),
+          children: [
+            openStreetMapTileLayer,
+            // PolylineLayer(
+            //   polylines: [MapRoute.getTestRoute()],
+            // ),
+
+            Consumer<RouteNotifier>(
+              builder: (_, value, __) {
+                final polyline = Polyline(
+                points: value.route,
+                strokeWidth: 5,
+                color: Colors.green,
+                borderStrokeWidth: 1,
+                borderColor: Colors.greenAccent,
+                // pattern: const StrokePattern.dotted(
+                //   spacingFactor: 1,
+                // ),
+                );
+
+                return PolylineLayer(
+                  polylines: [polyline],
+                );
+              },
+            ),
+
+            Consumer<PoiNotifier>(
               builder: (_, value, __) {
                 final markers = Poi.getMarkers(
                     value.poiList, Image.asset('assets/cafe_icon.png'));
                 return MarkerLayer(markers: markers);
               },
             ),
-          ),
-
-          ChangeNotifierProvider(
-            create: (_) {
-              return selectedPositionNotifier;
-            },
-            child: Consumer<SelectedPositionNotifier>(
+            Consumer<SelectedPositionNotifier>(
               builder: (_, value, __) {
                 if (value.selectedPosition != null) {
                   final marker = Marker(
                     point: value.selectedPosition!,
-                    child: Icon(Icons.zoom_in),
-                    width: 50,
-                    height: 50,
+                    child: Icon(Icons.location_on, color: Colors.redAccent),
+                    // width: 50,
+                    // height: 50,
                     alignment: Alignment.center,
                   );
                   return MarkerLayer(markers: [marker]);
@@ -85,17 +109,29 @@ class _MainMapWidgetState extends State<MainMapWidget> {
                 }
               },
             ),
-          ),
 
-          CurrentLocationLayer(
-            positionStream: _positionStream,
-            //alignPositionOnUpdate: AlignOnUpdate.always,
-          ),
-          const MapControlsLayer(),
-          PoiControlsLayer(poiListNotifier: _poiListNotifier),
-          AddressSearchLayer(),
-        ],
-      ),
+            //SelectedPositionControlsLayer(),
+
+            Consumer<SelectedPositionNotifier>(
+              builder: (_, value, __) {
+                if (value.selectedPosition != null) {
+                  return SelectedPositionControlsLayer();
+                } else {
+                  return MarkerLayer(markers: []);
+                }
+              },
+            ),
+
+            CurrentLocationLayer(
+              positionStream: _positionStream,
+              //alignPositionOnUpdate: AlignOnUpdate.always,
+            ),
+            const MapControlsLayer(),
+            PoiControlsLayer(),
+            AddressSearchLayer(),
+          ],
+        );
+      })),
     );
   }
 }

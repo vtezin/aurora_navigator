@@ -1,11 +1,10 @@
-import 'package:aurora_navigator/services/poi_service/poi_service_notifier.dart';
+import 'package:aurora_navigator/services/poi_service/poi_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:provider/provider.dart';
 
 class PoiControlsLayer extends StatelessWidget {
-  const PoiControlsLayer({super.key, required this.poiListNotifier});
-
-  final PoiServiceNotifier poiListNotifier;
+  const PoiControlsLayer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class PoiControlsLayer extends StatelessWidget {
             child: FloatingActionButton(
               heroTag: 'coffee',
               onPressed: () async {
-                await poiListNotifier.getPoiAround(mapController.camera.center, 'food/cafe');
+                Provider.of<PoiNotifier>(context).getPoiAround(mapController.camera.center, 'food/cafe');
               },
               child: Icon(Icons.coffee),
             ),
@@ -31,7 +30,7 @@ class PoiControlsLayer extends StatelessWidget {
             child: FloatingActionButton(
               heroTag: 'gasStations',
               onPressed: () async {
-                await poiListNotifier.getPoiAround(mapController.camera.center, 'shop/general/general');
+                Provider.of<PoiNotifier>(context).getPoiAround(mapController.camera.center, 'shop/general/general');
               },
               child: Icon(Icons.shopping_cart),
             ),
