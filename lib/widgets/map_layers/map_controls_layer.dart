@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 class MapControlsLayer extends StatelessWidget {
   const MapControlsLayer({super.key});
@@ -12,21 +12,26 @@ class MapControlsLayer extends StatelessWidget {
     final mapController = MapController.of(context);
     final mapCamera = MapCamera.of(context);
 
-    Position? currentLocation;
-    late bool servicePermission = false;
-    late LocationPermission permission;
+    Future<LocationData?> getCurrentLocation() async {
+      Location location = Location();
 
-    Future<Position> getCurrentLocation() async {
-      await Geolocator.isLocationServiceEnabled();
-      if (!servicePermission) {
-        print("service disabled");
+      var serviceEnabled = await location.serviceEnabled();
+      if (!serviceEnabled) {
+        serviceEnabled = await location.requestService();
+        if (!serviceEnabled) {
+          return null;
+        }
       }
 
-      permission = await Geolocator.checkPermission();
-      if(permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
+      var permissionGranted = await location.hasPermission();
+      if (permissionGranted == PermissionStatus.denied) {
+        permissionGranted = await location.requestPermission();
+        if (permissionGranted != PermissionStatus.granted) {
+          return null;
+        }
       }
-      return await Geolocator.getCurrentPosition();
+
+      return await location.getLocation();
     }
 
     return Align(
@@ -59,11 +64,14 @@ class MapControlsLayer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10, bottom: 20, right: 10),
             child: FloatingActionButton(
-              heroTag: 'zoomOutButton',
+              heroTag: 'curLocationButton',
               onPressed: () async {
-                currentLocation = await getCurrentLocation();
-                if (currentLocation != null) {
-                  mapController.move(LatLng(currentLocation!.latitude, currentLocation!.longitude), mapCamera.zoom);
+                final currentLocation = await getCurrentLocation();
+                final latitude = currentLocation?.latitude;
+                final longitude = currentLocation?.longitude;
+
+                if (currentLocation != null && latitude != null && longitude != null ) {
+                  mapController.move(LatLng(latitude, longitude), mapCamera.zoom);
                 }
               },
               child: Icon(Icons.near_me),
