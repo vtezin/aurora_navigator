@@ -37,11 +37,6 @@ dependencies:
   flutter_map_cancellable_tile_provider: ^3.0.2
   flutter_map_location_marker: ^9.1.1
   geolocator: ^13.0.2
-  geolocator_aurora:
-    git:
-      url: https://gitlab.com/alexsherkhan/geolocator_aurora.git
-      ref: main
-      path: ./
 
   location: ^5.0.3
   location_aurora:
